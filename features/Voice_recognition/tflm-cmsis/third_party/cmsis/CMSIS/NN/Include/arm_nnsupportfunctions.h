@@ -1,5 +1,13 @@
 /*
+<<<<<<< HEAD
  * Copyright (C) 2010-2021 Arm Limited or its affiliates.
+=======
+<<<<<<< HEAD:features/Voice_recognition/nnlib/Include/arm_nnsupportfunctions.h
+ * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
+=======
+ * Copyright (C) 2010-2021 Arm Limited or its affiliates.
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a:features/Voice_recognition/tflm-cmsis/third_party/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -21,8 +29,18 @@
  * Title:        arm_nnsupportfunctions.h
  * Description:  Public header file of support functions for CMSIS NN Library
  *
+<<<<<<< HEAD
  * $Date:        12. Nov 2021
  * $Revision:    V.6.0.0
+=======
+<<<<<<< HEAD:features/Voice_recognition/nnlib/Include/arm_nnsupportfunctions.h
+ * $Date:        24. Aug 2021
+ * $Revision:    V.5.10.0
+=======
+ * $Date:        12. Nov 2021
+ * $Revision:    V.6.0.0
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a:features/Voice_recognition/tflm-cmsis/third_party/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
  *
  * Target Processor:  Cortex-M CPUs
  * -------------------------------------------------------------------- */
@@ -31,7 +49,14 @@
 #define _ARM_NNSUPPORTFUNCTIONS_H_
 
 #include "arm_nn_math_types.h"
+<<<<<<< HEAD
 #include "arm_nn_types.h"
+=======
+<<<<<<< HEAD:features/Voice_recognition/nnlib/Include/arm_nnsupportfunctions.h
+=======
+#include "arm_nn_types.h"
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a:features/Voice_recognition/tflm-cmsis/third_party/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
 
 #ifdef __cplusplus
 extern "C" {
@@ -311,6 +336,28 @@ arm_status arm_nn_mat_mul_core_1x_s8(int32_t row_elements,
  * @param[in]       bias          Pointer to per-channel bias
  * @param[out]      output        Pointer to output where int8 results are stored.
  *
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:features/Voice_recognition/nnlib/Include/arm_nnsupportfunctions.h
+ * @details Pseudo-code
+ *      output[0] = 0
+ *         ..
+ *      output[3] = 0
+ *      sum_col = 0
+ *      for (i = 0; i < row_elements; i++)
+ *          output[0] += row_base[i] * col_base[i]
+ *                ..
+ *          output[3] += row_base[i + (row_elements * 3)] * col_base[i]
+ *          sum_col += col_base[i]
+ */
+arm_status arm_nn_mat_mul_core_4x_s8(const int32_t row_elements,
+                                     const int32_t offset,
+                                     const int8_t *row_base,
+                                     const int8_t *col_base,
+                                     int32_t *const sum_col,
+                                     int32_t *const output);
+=======
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
  * @return     The function returns the updated output pointer or NULL if implementation is not available.
  *
  * @details Compliant to TFLM int8 specification. MVE implementation only
@@ -324,6 +371,10 @@ int8_t *arm_nn_mat_mul_core_4x_s8(const int32_t row_elements,
                                   const cmsis_nn_per_channel_quant_params *quant_params,
                                   const int32_t *bias,
                                   int8_t *output);
+<<<<<<< HEAD
+=======
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a:features/Voice_recognition/tflm-cmsis/third_party/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
 
 /**
  * @brief General Matrix-multiplication function with per-channel requantization.
@@ -598,10 +649,23 @@ __STATIC_FORCEINLINE q31_t arm_nn_read_q7x4(const q7_t *in_q7)
 {
     q31_t val;
     memcpy(&val, in_q7, 4);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD:features/Voice_recognition/nnlib/Include/arm_nnsupportfunctions.h
 
     return (val);
 }
 
+=======
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
+
+    return (val);
+}
+
+<<<<<<< HEAD
+=======
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a:features/Voice_recognition/tflm-cmsis/third_party/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
 /**
   @brief         Write four q7 to q7 pointer and increment pointer afterwards.
   @param[in]     in       Double pointer to input value
@@ -647,7 +711,15 @@ __STATIC_FORCEINLINE void arm_memset_q7(q7_t *dst, const q7_t val, uint32_t bloc
 __STATIC_FORCEINLINE const q7_t *read_and_pad(const q7_t *source, q31_t *out1, q31_t *out2)
 {
     q31_t inA = arm_nn_read_q7x4_ia(&source);
+<<<<<<< HEAD
     q31_t inAbuf1 = __SXTB16(__ROR((uint32_t)inA, 8));
+=======
+<<<<<<< HEAD:features/Voice_recognition/nnlib/Include/arm_nnsupportfunctions.h
+    q31_t inAbuf1 = __SXTB16_RORn((uint32_t)inA, 8);
+=======
+    q31_t inAbuf1 = __SXTB16(__ROR((uint32_t)inA, 8));
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a:features/Voice_recognition/tflm-cmsis/third_party/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
     q31_t inAbuf2 = __SXTB16(inA);
 
 #ifndef ARM_MATH_BIG_ENDIAN
@@ -747,7 +819,15 @@ void arm_nn_mult_q7(q7_t *pSrcA, q7_t *pSrcB, q7_t *pDst, const uint16_t out_shi
  * @brief macro for adding rounding offset
  */
 #ifndef ARM_NN_TRUNCATE
+<<<<<<< HEAD
 #define NN_ROUND(out_shift) ((0x1 << out_shift) >> 1)
+=======
+<<<<<<< HEAD:features/Voice_recognition/nnlib/Include/arm_nnsupportfunctions.h
+#define NN_ROUND(out_shift) ((0x1u << out_shift) >> 1)
+=======
+#define NN_ROUND(out_shift) ((0x1 << out_shift) >> 1)
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a:features/Voice_recognition/tflm-cmsis/third_party/cmsis/CMSIS/NN/Include/arm_nnsupportfunctions.h
+>>>>>>> 1705e20811d9d272f03cffaf1803cb8344a7048a
 #else
 #define NN_ROUND(out_shift) 0
 #endif
