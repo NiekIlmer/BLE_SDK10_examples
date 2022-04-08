@@ -29,6 +29,8 @@
 #include "audio_iface.h"
 #include "audio_acquisition.h"
 
+#include "main_functions.h"
+
 /* Task priorities */
 #define mainTEMPLATE_TASK_PRIORITY              ( OS_TASK_PRIORITY_NORMAL )
 
@@ -137,7 +139,12 @@ int main( void )
         there was insufficient FreeRTOS heap memory available for the idle and/or
         timer tasks to be created.  See the memory management section on the
         FreeRTOS web site for more details. */
-        for ( ;; );
+        for ( ;; ) {
+                setup();
+                while (true) {
+                        loop();
+                }
+        }
 
 }
 
