@@ -157,7 +157,7 @@ void audio_acquisition_task( void *pvParameters )
         dma_x_ctrl_reg = (dma_size_t *)DMA_CHN_REG(DMA->DMA0_CTRL_REG, 2);
         *dma_x_ctrl_reg |=  HW_DMA_MODE_CIRCULAR;
 
-        arm_rfft_fast_instance_f32 S;    /* ARM CFFT module */
+   //     arm_rfft_fast_instance_f32 S;    /* ARM CFFT module */
 
         for ( ;; ) {
                 OS_BASE_TYPE xResult = OS_TASK_NOTIFY_WAIT(OS_TASK_NOTIFY_ALL_BITS,
@@ -185,9 +185,9 @@ void audio_acquisition_task( void *pvParameters )
 //
 //                        /* Process the data through the Complex Magnitude Module for calculating the magnitude at each bin */
 //                        arm_cmplx_mag_f32(Input, Output, FFT_SIZE);
-                        arm_rfft_fast_init_f32(&S, FFT_SIZE);
-                        arm_rfft_fast_f32(&S, Input, Output, 0);
-                        arm_cmplx_mag_f32(Output,Input,FFT_SIZE);
+         //               arm_rfft_fast_init_f32(&S, FFT_SIZE);
+         //               arm_rfft_fast_f32(&S, Input, Output, 0);
+         //               arm_cmplx_mag_f32(Output,Input,FFT_SIZE);
                         for (int i = 0; i < FFT_SIZE/2; i++){
                                 printf("%d, ", (int) (Input[i] * 10000.0));
                                 fflush(stdout);
