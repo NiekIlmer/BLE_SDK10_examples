@@ -44,7 +44,7 @@ static void prvSetupHardware( void );
 /*
  * Task functions .
  */
-static void prvTemplateTask( void *pvParameters );
+static void TensorFlowTask( void *pvParameters );
 static void audio_pins_init(void);
 
 static OS_TASK xHandle;
@@ -80,12 +80,15 @@ static void system_init( void *pvParameters )
         /* Set the desired wakeup mode. */
         pm_set_sys_wakeup_mode(pm_sys_wakeup_mode_fast);
 
+        printf("\nHello world\n");
+
+
         /* Start main task here (text menu available via UART1 to control application) */
-        OS_TASK_CREATE( "Template",            /* The text name assigned to the task, for
+        OS_TASK_CREATE( "Tensorflow",            /* The text name assigned to the task, for
                                                            debug only; not used by the kernel. */
-                        prvTemplateTask,                /* The function that implements the task. */
+                        TensorFlowTask,                /* The function that implements the task. */
                         NULL,                           /* The parameter passed to the task. */
-                        1024,
+                        1024*16,
                                                         /* The number of bytes to allocate to the
                                                            stack of the task. */
                         mainTEMPLATE_TASK_PRIORITY,     /* The priority assigned to the task. */
@@ -140,10 +143,6 @@ int main( void )
         timer tasks to be created.  See the memory management section on the
         FreeRTOS web site for more details. */
         for ( ;; ) {
-                setup();
-                while (true) {
-                        loop();
-                }
         }
 
 }
@@ -152,27 +151,12 @@ int main( void )
  * @brief Template task increases a counter every mainCOUNTER_FREQUENCY_MS ms
  */
 
-static void prvTemplateTask( void *pvParameters )
+static void TensorFlowTask( void *pvParameters )
 {
-        OS_TICK_TIME xNextWakeTime;
-        static uint32_t test_counter=0;
-
-
-        /* Initialise xNextWakeTime - this only needs to be done once. */
-        xNextWakeTime = OS_GET_TICK_COUNT();
-
+        setup();
         for ( ;; ) {
-                /* Place this task in the blocked state until it is time to run again.
-                   The block time is specified in ticks, the constant used converts ticks
-                   to ms.  While in the Blocked state this task will not consume any CPU
-                   time. */
-                vTaskDelayUntil( &xNextWakeTime, mainCOUNTER_FREQUENCY_MS );
-                test_counter++;
-
-                if (test_counter % (1000 / OS_TICKS_2_MS(mainCOUNTER_FREQUENCY_MS)) == 0) {
-                        //printf("#");
-                        fflush(stdout);
-                }
+                loop();
+                vTaskDelay(OS_MS_2_TICKS(1));
         }
 }
 

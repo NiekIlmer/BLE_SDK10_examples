@@ -16,24 +16,17 @@ limitations under the License.
 #include "audio_provider.h"
 
 #include "micro_features/micro_model_settings.h"
-
-namespace {
-int16_t g_dummy_audio_data[kMaxAudioSampleSize];
-int32_t g_latest_audio_timestamp = 0;
-}  // namespace
+extern long unsigned int last_audio_sample;
+extern int16_t* last_audio_data;
 
 TfLiteStatus GetAudioSamples(tflite::ErrorReporter* error_reporter,
                              int start_ms, int duration_ms,
                              int* audio_samples_size, int16_t** audio_samples) {
-  for (int i = 0; i < kMaxAudioSampleSize; ++i) {
-    g_dummy_audio_data[i] = 0;
-  }
-  *audio_samples_size = kMaxAudioSampleSize;
-  *audio_samples = g_dummy_audio_data;
+  *audio_samples_size = 480;
+  *audio_samples = last_audio_data;
   return kTfLiteOk;
 }
 
 int32_t LatestAudioTimestamp() {
-  g_latest_audio_timestamp += 100;
-  return g_latest_audio_timestamp;
+  return last_audio_sample;
 }

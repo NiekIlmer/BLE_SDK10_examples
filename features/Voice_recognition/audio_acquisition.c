@@ -27,11 +27,13 @@
  * Globals
  */
 
-#define SAMPLES                 512
-#define FFT_SIZE                SAMPLES / 2
+#define SAMPLES                 480 * 2
+#define FFT_SIZE                512
 
 float32_t Input[SAMPLES];
 float32_t Output[SAMPLES];
+TickType_t last_audio_sample = 0;
+int16_t last_audio_data[FFT_SIZE];
 context_acquire_apu_t context_acquire_apu;
 
 
@@ -82,7 +84,7 @@ typedef struct {
 
 context_demo_apu_t context_demo_apu;
 
-#define CB_INTERVAL 512 * 2
+#define CB_INTERVAL 320 * 2
 #define BUFFER_SIZE CB_INTERVAL * 10
 
 #define DMA_CHN_REG(reg, chan) ((volatile uint32 *)(&(reg)) + ((chan) * 8))
@@ -128,7 +130,7 @@ void audio_acquisition_task( void *pvParameters )
                                                             audio_buffer_ready_cb,
                                                             &context_demo_apu);
 
-        context_demo_apu.dev_out.memory_param.sample_rate = 8000; //Set memory sample rate in Hz
+        context_demo_apu.dev_out.memory_param.sample_rate = 16000; //Set memory sample rate in Hz
         context_demo_apu.dev_out.memory_param.bits_depth = 16;    //Set memory bit depth
 
         // Channels 0, 2, 4 or 6 must be used for SRC output
@@ -157,7 +159,7 @@ void audio_acquisition_task( void *pvParameters )
         dma_x_ctrl_reg = (dma_size_t *)DMA_CHN_REG(DMA->DMA0_CTRL_REG, 2);
         *dma_x_ctrl_reg |=  HW_DMA_MODE_CIRCULAR;
 
-   //     arm_rfft_fast_instance_f32 S;    /* ARM CFFT module */
+        arm_rfft_fast_instance_f32 S;    /* ARM CFFT module */
 
         for ( ;; ) {
                 OS_BASE_TYPE xResult = OS_TASK_NOTIFY_WAIT(OS_TASK_NOTIFY_ALL_BITS,
@@ -167,16 +169,26 @@ void audio_acquisition_task( void *pvParameters )
 
                 OS_ASSERT(xResult == OS_OK);
                 if(notified_value & NOTIF_TASK_AQUISITION_DONE){
+                        TickType_t temp = OS_TICKS_2_MS(OS_GET_TICK_COUNT());
                         int end = (context_demo_apu.available_to_read%(BUFFER_SIZE/2));
                         if(end == 0){
                                 end = BUFFER_SIZE/2;
                         }
-                        int start = end - SAMPLES;
+                        int start = end - SAMPLES/2;
+                        start = start < 0 ? BUFFER_SIZE/2 - start : start;
                         int j = 0;
-                        for(int i = start; i < end; i++){
-                                Input[j++] = ((float)(((int16_t*)context_demo_apu.dev_out.memory_param.buff_addr[0])[i]));
+                        if (start < end){
+                                for(int i = start; i < end; i++){
+                                        Input[j++] = ((float)(((int16_t*)context_demo_apu.dev_out.memory_param.buff_addr[0])[i]));
+                                }
+                        } else {
+                                for(int i = start; i < BUFFER_SIZE/2; i++){
+                                        Input[j++] = ((float)(((int16_t*)context_demo_apu.dev_out.memory_param.buff_addr[0])[i]));
+                                }
+                                for(int i = 0; i < end; i++){
+                                        Input[j++] = ((float)(((int16_t*)context_demo_apu.dev_out.memory_param.buff_addr[0])[i]));
+                                }
                         }
-
 //                        /* Initialize the CFFT/CIFFT module, intFlag = 0, doBitReverse = 1 */
 //                        arm_cfft_radix4_init_f32(&S, FFT_SIZE, 0, 1);
 //
@@ -185,14 +197,16 @@ void audio_acquisition_task( void *pvParameters )
 //
 //                        /* Process the data through the Complex Magnitude Module for calculating the magnitude at each bin */
 //                        arm_cmplx_mag_f32(Input, Output, FFT_SIZE);
-         //               arm_rfft_fast_init_f32(&S, FFT_SIZE);
-         //               arm_rfft_fast_f32(&S, Input, Output, 0);
-         //               arm_cmplx_mag_f32(Output,Input,FFT_SIZE);
+                        arm_rfft_fast_init_f32(&S, FFT_SIZE);
+                        arm_rfft_fast_f32(&S, Input, Output, 0);
+                        arm_cmplx_mag_f32(Output,Input,FFT_SIZE);
                         for (int i = 0; i < FFT_SIZE/2; i++){
-                                printf("%d, ", (int) (Input[i] * 10000.0));
-                                fflush(stdout);
+                                last_audio_data[i] = Input[i] * 10000.0;
+//                                printf("%d, ", (int) (Input[i] * 10000.0));
+//                                fflush(stdout);
                         }
-                        printf("0\n");
+                        last_audio_sample = temp;
+                        printf("Time: %ldms, from: %d to %d\n", last_audio_sample, start, end);
                         fflush(stdout);
                 }
                 if(notified_value & NOTIF_TASK_AQUISITION_STOP){

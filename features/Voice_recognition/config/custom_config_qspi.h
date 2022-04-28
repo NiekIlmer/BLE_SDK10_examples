@@ -19,8 +19,15 @@
 
 #define CONFIG_RETARGET
 
+#define dg_configUSE_SEGGER_FLASH_LOADER        (1)
+#define configENABLE_BACKWARD_COMPATIBILITY     (0)
+#define configUSE_STATS_FORMATTING_FUNCTIONS    (1)
+#define dg_configENABLE_MTB                     (1)
+//#define configUSE_TRACE_FACILITY                (1)
+
 #define CONFIG_RETARGET_UART_BAUDRATE           HW_UART_BAUDRATE_1000000
 //#define dg_configSYSTEMVIEW                     (1)
+#  define __HEAP_SIZE                           0x1000
 
 #define dg_configUSE_LP_CLK                     ( LP_CLK_32768 )
 #define dg_configEXEC_MODE                      MODE_IS_CACHED
@@ -40,6 +47,7 @@
 /*************************************************************************************************\
  * FreeRTOS specific config
  */
+
 #define OS_FREERTOS                              /* Define this to use FreeRTOS */
 #define configTOTAL_HEAP_SIZE                    34000*3   /* This is the FreeRTOS Total Heap Size */
 
