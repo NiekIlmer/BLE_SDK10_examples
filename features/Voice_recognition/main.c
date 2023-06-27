@@ -131,6 +131,7 @@ int main( void )
 
         /* Start the tasks and timer running. */
         vTaskStartScheduler();
+//        setup();        // GF280222 - this is the TF initialization
 
         /* If all is well, the scheduler will now be running, and the following
         line will never be reached.  If the following line does execute, then

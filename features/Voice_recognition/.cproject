@@ -166,6 +166,10 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/sdk/snc/include}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/sdk/snc/src}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/tflite-micro}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/helloworld&quot;"/>
                                     								
                                 </option>
                                 								
@@ -210,6 +214,8 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/nnlib}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/dsplib}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/tflite-micro/tensorflow/lite/micro/tools/make/gen/cortex_m_generic_cortex-m33_default/lib}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -218,6 +224,8 @@
                                     <listOptionValue builtIn="false" value="cmsis-nn"/>
                                     									
                                     <listOptionValue builtIn="false" value="arm_ARMv8MMLldfsp_math"/>
+                                    									
+                                    <listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="tensorflow-microlite"/>
                                     								
                                 </option>
                                 								
